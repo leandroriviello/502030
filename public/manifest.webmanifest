@@ -1,0 +1,11 @@
+{
+  "name": "Regla 50/20/30",
+  "short_name": "502030",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "es",
+  "description": "Controla tus finanzas personales siguiendo la regla 50/20/30 con una interfaz Liquid Glass.",
+  "icons": []
+}
