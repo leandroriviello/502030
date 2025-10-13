@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 const MIN_PASSWORD_LENGTH = 8;
 const USERNAME_REGEX = /^[a-zA-Z0-9_.-]{3,}$/;
@@ -57,6 +58,22 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     console.error('Error registrando usuario:', error);
+
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (error.code === 'P2002') {
+        return NextResponse.json(
+          { error: 'El email o usuario ya están registrados.' },
+          { status: 409 }
+        );
+      }
+      if (error.code === 'P2021') {
+        return NextResponse.json(
+          { error: 'La base de datos aún no está migrada. Ejecuta las migraciones antes de crear usuarios.' },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Ocurrió un error creando la cuenta. Intenta nuevamente.' },
       { status: 500 }
