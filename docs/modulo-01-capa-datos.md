@@ -6,7 +6,7 @@ Este módulo define la base técnica para almacenar información financiera en e
 
 - Modelar entidades clave: ingresos, gastos, fondos, tarjetas, suscripciones y reportes.
 - Exponer un wrapper `FinanceDatabase` con Dexie para operaciones CRUD tipadas.
-- Facilitar la sincronización con Zustand mediante helpers reutilizables.
+- Facilitar la sincronización con el proveedor global de estado mediante helpers reutilizables.
 
 ## Componentes principales
 

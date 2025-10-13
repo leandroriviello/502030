@@ -18,8 +18,7 @@
     "next": "15.0.0-canary.64",
     "react": "19.0.0-rc.0",
     "react-dom": "19.0.0-rc.0",
-    "scheduler": "0.23.0",
-    "zustand": "5.0.0-rc.2"
+    "scheduler": "0.23.0"
   },
   "devDependencies": {
     "@types/node": "20.11.30",
