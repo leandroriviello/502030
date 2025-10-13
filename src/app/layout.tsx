@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { Inter } from 'next/font/google';
 import { PWAInitializer } from '@/components/PWAInitializer';
+import { AuthProvider } from '@/components/AuthProvider';
 import { FinanceStoreProvider } from '@/store/useFinanceStore';
 import './globals.css';
 
@@ -33,10 +34,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans bg-liquid-glass text-foreground antialiased`}>
-        <FinanceStoreProvider>
-          <PWAInitializer />
-          <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
-        </FinanceStoreProvider>
+        <AuthProvider>
+          <FinanceStoreProvider>
+            <PWAInitializer />
+            <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
+          </FinanceStoreProvider>
+        </AuthProvider>
       </body>
     </html>
   );
