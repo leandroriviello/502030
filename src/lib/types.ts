@@ -6,7 +6,6 @@
 export type CurrencyCode = 'ARS' | 'USD' | 'EUR' | 'BRL' | 'CLP' | 'COP' | 'BTC';
 
 export type TransactionCategory =
-  | 'ingreso'
   | 'necesidades'
   | 'ahorros'
   | 'deseos'
