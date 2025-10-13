@@ -8,6 +8,7 @@ export interface GlassCardProps {
   description?: string;
   action?: ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 /** Contenedor reusable con estética Liquid Glass y animación suave */
@@ -16,15 +17,17 @@ export function GlassCard({
   description,
   action,
   className,
+  onClick,
   children
 }: PropsWithChildren<GlassCardProps>): JSX.Element {
   return (
     <motion.section
-      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-accent-blue/30 hover:shadow-glass-lg ${className ?? 'glass-card'}`}
+      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-accent-blue/30 hover:shadow-glass-lg ${className ?? 'glass-card'} ${onClick ? 'cursor-pointer' : ''}`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 120, damping: 18 }}
       whileHover={{ translateY: -2, scale: 1.01 }}
+      onClick={onClick}
       style={{
         background: 'linear-gradient(135deg, rgba(28,28,30,0.8) 0%, rgba(28,28,30,0.6) 100%)',
         backdropFilter: 'blur(20px) saturate(180%)',
