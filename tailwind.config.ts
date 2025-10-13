@@ -12,33 +12,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Colores base del sistema Apple
         surface: '#000000',
-        'surface-elevated': 'rgba(28, 28, 30, 0.95)',
-        'surface-glass': 'rgba(28, 28, 30, 0.75)',
+        'surface-elevated': 'rgba(24, 24, 24, 0.95)',
+        'surface-glass': 'rgba(24, 24, 24, 0.75)',
         foreground: '#FFFFFF',
-        'foreground-secondary': 'rgba(255, 255, 255, 0.85)',
-        'foreground-tertiary': 'rgba(255, 255, 255, 0.6)',
-        
-        // Colores de acento Apple-style
-        'accent-blue': 'rgba(0, 122, 255, 0.8)',
-        'accent-green': 'rgba(52, 199, 89, 0.8)',
-        'accent-purple': 'rgba(175, 82, 222, 0.8)',
-        'accent-orange': 'rgba(255, 149, 0, 0.8)',
-        
-        // Colores específicos de la regla 50/20/30
-        needs: 'rgba(0, 122, 255, 0.4)',
-        savings: 'rgba(52, 199, 89, 0.4)',
-        wants: 'rgba(175, 82, 222, 0.4)',
-        
-        // Glass effect colors
-        glass: 'rgba(28, 28, 30, 0.82)',
-        'glass-border': 'rgba(255, 255, 255, 0.1)'
+        'foreground-secondary': 'rgba(255, 255, 255, 0.82)',
+        'foreground-tertiary': 'rgba(255, 255, 255, 0.55)',
+        'accent-muted': 'rgba(120, 120, 120, 0.45)',
+        'accent-muted-strong': 'rgba(160, 160, 160, 0.6)',
+        needs: 'rgba(0, 122, 255, 0.45)',
+        savings: 'rgba(52, 199, 89, 0.45)',
+        wants: 'rgba(175, 82, 222, 0.45)',
+        glass: 'rgba(24, 24, 24, 0.82)',
+        'glass-border': 'rgba(255, 255, 255, 0.08)'
       },
       backgroundImage: {
-        'liquid-glass': 'linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(28,28,30,0.95) 50%, rgba(0,0,0,0.9) 100%)',
-        'glass-gradient': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
-        'accent-gradient': 'linear-gradient(135deg, rgba(0,122,255,0.2) 0%, rgba(175,82,222,0.2) 100%)'
+        'liquid-glass':
+          'linear-gradient(135deg, rgba(5,5,5,1) 0%, rgba(18,18,18,0.98) 50%, rgba(5,5,5,1) 100%)',
+        'glass-gradient':
+          'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%)',
+        'accent-gradient':
+          'linear-gradient(135deg, rgba(120,120,120,0.25) 0%, rgba(80,80,80,0.2) 100%)'
       },
       boxShadow: {
         'glass': '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',

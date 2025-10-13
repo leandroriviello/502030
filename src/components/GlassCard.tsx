@@ -22,7 +22,7 @@ export function GlassCard({
 }: PropsWithChildren<GlassCardProps>): JSX.Element {
   return (
     <motion.section
-      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-accent-blue/30 hover:shadow-glass-lg ${className ?? 'glass-card'} ${onClick ? 'cursor-pointer' : ''}`}
+      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-accent-muted-strong/40 hover:shadow-glass-lg ${className ?? 'glass-card'} ${onClick ? 'cursor-pointer' : ''}`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 120, damping: 18 }}
@@ -34,7 +34,7 @@ export function GlassCard({
         WebkitBackdropFilter: 'blur(20px) saturate(180%)'
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 to-accent-purple/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-white/2 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="relative flex h-full flex-col gap-6 p-6 md:p-8">
         {(title || action) && (
           <header className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">

@@ -144,9 +144,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps): JSX.Element {
                   <div
                     key={step}
                     className={`h-2 w-8 rounded-full transition-all duration-300 ${
-                      step <= currentStep
-                        ? 'bg-accent-blue'
-                        : 'bg-glass-border'
+                      step <= currentStep ? 'bg-accent-muted-strong' : 'bg-glass-border'
                     }`}
                   />
                 ))}
