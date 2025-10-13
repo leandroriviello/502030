@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { Inter } from 'next/font/google';
 import { PWAInitializer } from '@/components/PWAInitializer';
-import { FinanceStoreProvider } from '@/store/useFinanceStore';
 import './globals.css';
 
 const inter = Inter({
@@ -33,9 +32,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className={`${inter.variable} bg-surface text-foreground`}>
         <PWAInitializer />
-        <FinanceStoreProvider>
-          <div className="min-h-screen bg-liquid-glass">{children}</div>
-        </FinanceStoreProvider>
+        <div className="min-h-screen bg-liquid-glass">{children}</div>
       </body>
     </html>
   );
