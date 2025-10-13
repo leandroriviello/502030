@@ -7,5 +7,5 @@ const nextConfig = {
   // Railway lo asignará automáticamente a través de la variable PORT
 };
 
-module.exports = nextConfig;
+export default nextConfig;
 
