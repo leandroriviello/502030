@@ -1,26 +1,10 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import { Inter, SF_Pro_Display, SF_Pro_Text } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { PWAInitializer } from '@/components/PWAInitializer';
 import './globals.css';
 
-// Fuente principal - SF Pro Display (equivalente a Apple's system font)
-const sfProDisplay = SF_Pro_Display({
-  subsets: ['latin'],
-  variable: '--font-sf-pro-display',
-  display: 'swap',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-});
-
-// Fuente secundaria - SF Pro Text para texto más pequeño
-const sfProText = SF_Pro_Text({
-  subsets: ['latin'],
-  variable: '--font-sf-pro-text',
-  display: 'swap',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-});
-
-// Fallback con Inter
+// Fuente principal - Inter como base, con fallback a fuentes del sistema Apple
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -47,7 +31,7 @@ export default function RootLayout({
 }: PropsWithChildren): JSX.Element {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${sfProDisplay.variable} ${sfProText.variable} ${inter.variable} font-sans bg-liquid-glass text-foreground antialiased`}>
+      <body className={`${inter.variable} font-sans bg-liquid-glass text-foreground antialiased`}>
         <PWAInitializer />
         <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
       </body>

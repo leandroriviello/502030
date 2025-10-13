@@ -57,32 +57,31 @@ const config: Config = {
       },
       fontFamily: {
         'sans': [
-          'var(--font-sf-pro-display)', 
-          'var(--font-sf-pro-text)', 
           '-apple-system', 
           'BlinkMacSystemFont', 
           'SF Pro Display', 
           'SF Pro Text', 
+          'var(--font-inter)', 
           'Helvetica Neue', 
           'Helvetica', 
           'Arial', 
           'sans-serif'
         ],
         'display': [
-          'var(--font-sf-pro-display)', 
           '-apple-system', 
           'BlinkMacSystemFont', 
           'SF Pro Display', 
+          'var(--font-inter)', 
           'Helvetica Neue', 
           'Helvetica', 
           'Arial', 
           'sans-serif'
         ],
         'text': [
-          'var(--font-sf-pro-text)', 
           '-apple-system', 
           'BlinkMacSystemFont', 
           'SF Pro Text', 
+          'var(--font-inter)', 
           'Helvetica Neue', 
           'Helvetica', 
           'Arial', 
