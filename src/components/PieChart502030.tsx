@@ -17,9 +17,9 @@ export function PieChart502030({ distribution }: PieChartProps): JSX.Element {
   const deseos = Math.round(distribution.deseos * 100);
 
   const conicGradient = `conic-gradient(
-    rgba(56,139,255,0.65) 0deg ${3.6 * necesidades}deg,
-    rgba(16,242,170,0.65) ${3.6 * necesidades}deg ${3.6 * (necesidades + ahorros)}deg,
-    rgba(166,128,255,0.65) ${3.6 * (necesidades + ahorros)}deg 360deg
+    rgba(255,255,255,0.8) 0deg ${3.6 * necesidades}deg,
+    rgba(255,255,255,0.6) ${3.6 * necesidades}deg ${3.6 * (necesidades + ahorros)}deg,
+    rgba(255,255,255,0.4) ${3.6 * (necesidades + ahorros)}deg 360deg
   )`;
 
   return (
@@ -36,21 +36,21 @@ export function PieChart502030({ distribution }: PieChartProps): JSX.Element {
         />
         <div className="absolute inset-10 rounded-full bg-black/70 backdrop-blur-xl" />
         <div className="absolute inset-12 flex flex-col items-center justify-center text-center">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/40">Meta</p>
-          <p className="mt-1 text-lg font-semibold text-white">50 · 20 · 30</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-foreground-tertiary">Meta</p>
+          <p className="mt-1 text-lg font-semibold text-foreground">50 · 20 · 30</p>
         </div>
       </div>
-      <ul className="flex gap-6 text-sm text-white/70">
+      <ul className="flex gap-6 text-sm text-foreground-secondary">
         <li className="flex items-center gap-2">
-          <span className="h-2 w-8 rounded-full bg-[rgba(56,139,255,0.7)]" />
+          <span className="h-2 w-8 rounded-full bg-foreground" />
           Necesidades {necesidades}%
         </li>
         <li className="flex items-center gap-2">
-          <span className="h-2 w-8 rounded-full bg-[rgba(16,242,170,0.7)]" />
+          <span className="h-2 w-8 rounded-full bg-foreground-secondary" />
           Ahorros {ahorros}%
         </li>
         <li className="flex items-center gap-2">
-          <span className="h-2 w-8 rounded-full bg-[rgba(166,128,255,0.7)]" />
+          <span className="h-2 w-8 rounded-full bg-foreground-tertiary" />
           Deseos {deseos}%
         </li>
       </ul>

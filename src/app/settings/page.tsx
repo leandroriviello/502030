@@ -90,7 +90,7 @@ export default function SettingsPage(): JSX.Element {
               <div className="mt-6 pt-6 border-t border-glass-border">
                 <button
                   onClick={handleEditConfig}
-                  className="glass-button px-6 py-3 rounded-apple bg-accent-blue hover:bg-accent-blue/80 transition-all duration-200"
+                  className="glass-button px-6 py-3 rounded-apple bg-foreground hover:bg-foreground-secondary text-surface transition-all duration-200"
                 >
                   Editar Configuración
                 </button>
@@ -104,9 +104,9 @@ export default function SettingsPage(): JSX.Element {
             >
               <div className="grid gap-4">
                 {[
-                  { key: 'needs', label: 'Necesidades', color: 'accent-blue', percentage: userConfig.customRule?.needs || 50 },
-                  { key: 'savings', label: 'Ahorros', color: 'accent-green', percentage: userConfig.customRule?.savings || 20 },
-                  { key: 'wants', label: 'Deseos', color: 'accent-purple', percentage: userConfig.customRule?.wants || 30 }
+                  { key: 'needs', label: 'Necesidades', color: '#FFFFFF', percentage: userConfig.customRule?.needs || 50 },
+                  { key: 'savings', label: 'Ahorros', color: 'rgba(255,255,255,0.7)', percentage: userConfig.customRule?.savings || 20 },
+                  { key: 'wants', label: 'Deseos', color: 'rgba(255,255,255,0.4)', percentage: userConfig.customRule?.wants || 30 }
                 ].map(({ key, label, color, percentage }) => (
                   <div key={key} className="glass-card p-4 rounded-apple">
                     <div className="flex justify-between items-center mb-2">
@@ -117,8 +117,11 @@ export default function SettingsPage(): JSX.Element {
                     </div>
                     <div className="w-full bg-glass-border rounded-full h-2">
                       <div
-                        className={`h-2 rounded-full bg-${color} transition-all duration-500`}
-                        style={{ width: `${percentage}%` }}
+                        className="h-2 rounded-full transition-all duration-500"
+                        style={{ 
+                          width: `${percentage}%`,
+                          backgroundColor: color
+                        }}
                       />
                     </div>
                   </div>
@@ -134,7 +137,7 @@ export default function SettingsPage(): JSX.Element {
               </p>
               <button
                 onClick={handleEditConfig}
-                className="glass-button px-8 py-4 rounded-apple bg-accent-blue hover:bg-accent-blue/80 transition-all duration-200 text-lg font-display font-semibold"
+                className="glass-button px-8 py-4 rounded-apple bg-foreground hover:bg-foreground-secondary text-surface transition-all duration-200 text-lg font-display font-semibold"
               >
                 Comenzar Configuración
               </button>

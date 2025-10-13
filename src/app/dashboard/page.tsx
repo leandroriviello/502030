@@ -16,9 +16,9 @@ const sampleDistribution = {
 };
 
 const sampleFunds = [
-  { label: 'Fondo de emergencia', progress: 0.62, accent: 'rgba(56,139,255,0.75)' },
-  { label: 'Vacaciones', progress: 0.35, accent: 'rgba(166,128,255,0.75)' },
-  { label: 'Inversiones', progress: 0.48, accent: 'rgba(16,242,170,0.75)' }
+  { label: 'Fondo de emergencia', progress: 0.62, accent: 'rgba(255,255,255,0.8)' },
+  { label: 'Vacaciones', progress: 0.35, accent: 'rgba(255,255,255,0.6)' },
+  { label: 'Inversiones', progress: 0.48, accent: 'rgba(255,255,255,0.4)' }
 ];
 
 export default function DashboardPage(): JSX.Element {
@@ -72,7 +72,7 @@ export default function DashboardPage(): JSX.Element {
               </li>
               <li className="flex items-center justify-between glass-card px-6 py-4 text-sm rounded-apple">
                 <span className="font-text">Ahorro proyectado</span>
-                <span className="font-semibold text-foreground font-display text-gradient-accent">
+                <span className="font-semibold text-foreground-secondary font-display">
                   {userConfig ? `${userConfig.currency === 'ARS' ? '$' : userConfig.currency === 'USD' ? '$' : userConfig.currency === 'EUR' ? '€' : userConfig.currency} ${Math.round(userConfig.monthlySalary * (userConfig.customRule?.savings || 20) / 100).toLocaleString()}` : '$ 380.000'}
                 </span>
               </li>

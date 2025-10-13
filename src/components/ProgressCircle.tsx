@@ -29,7 +29,7 @@ export function ProgressCircle({
         width="180"
         height="180"
         viewBox="0 0 180 180"
-        className="drop-shadow-[0_20px_40px_rgba(16,242,170,0.15)]"
+        className="drop-shadow-[0_20px_40px_rgba(255,255,255,0.1)]"
       >
         <circle
           cx="90"
@@ -54,8 +54,8 @@ export function ProgressCircle({
         />
       </svg>
       <div className="text-center">
-        <p className="text-2xl font-semibold text-white">{Math.round(clamped * 100)}%</p>
-        <p className="text-sm text-white/60">{label}</p>
+        <p className="text-2xl font-semibold text-foreground">{Math.round(clamped * 100)}%</p>
+        <p className="text-sm text-foreground-secondary">{label}</p>
       </div>
     </motion.div>
   );

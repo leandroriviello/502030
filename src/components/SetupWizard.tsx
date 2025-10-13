@@ -42,13 +42,53 @@ export function SetupWizard({ onComplete }: SetupWizardProps): JSX.Element {
   };
 
   const handleRuleChange = (field: 'needs' | 'savings' | 'wants', value: number) => {
-    setFormData(prev => ({
-      ...prev,
-      customRule: {
-        ...prev.customRule,
-        [field]: value
+    setFormData(prev => {
+      const currentTotal = prev.customRule.needs + prev.customRule.savings + prev.customRule.wants;
+      const currentValue = prev.customRule[field];
+      const difference = value - currentValue;
+      
+      // Si el nuevo total sería mayor a 100, ajustar los otros campos proporcionalmente
+      if (currentTotal + difference > 100) {
+        const maxAllowed = 100 - (prev.customRule.needs + prev.customRule.savings + prev.customRule.wants - currentValue);
+        const adjustedValue = Math.min(value, maxAllowed);
+        
+        // Calcular cómo distribuir el exceso entre los otros campos
+        const excess = (currentTotal + difference) - 100;
+        const otherFields = ['needs', 'savings', 'wants'].filter(f => f !== field) as Array<'needs' | 'savings' | 'wants'>;
+        const otherTotal = otherFields.reduce((sum, f) => sum + prev.customRule[f], 0);
+        
+        const newRule = { ...prev.customRule, [field]: adjustedValue };
+        
+        // Reducir proporcionalmente los otros campos
+        otherFields.forEach(otherField => {
+          const proportion = prev.customRule[otherField] / otherTotal;
+          const reduction = excess * proportion;
+          newRule[otherField] = Math.max(0, prev.customRule[otherField] - reduction);
+        });
+        
+        // Asegurar que sume exactamente 100
+        const finalTotal = newRule.needs + newRule.savings + newRule.wants;
+        if (finalTotal !== 100) {
+          const adjustment = 100 - finalTotal;
+          const largestField = Object.entries(newRule).reduce((a, b) => newRule[a[0] as keyof typeof newRule] > newRule[b[0] as keyof typeof newRule] ? a : b)[0] as 'needs' | 'savings' | 'wants';
+          newRule[largestField] += adjustment;
+        }
+        
+        return {
+          ...prev,
+          customRule: newRule
+        };
       }
-    }));
+      
+      // Si el total sigue siendo válido, actualizar normalmente
+      return {
+        ...prev,
+        customRule: {
+          ...prev.customRule,
+          [field]: value
+        }
+      };
+    });
   };
 
   const handleNext = () => {
@@ -183,48 +223,58 @@ export function SetupWizard({ onComplete }: SetupWizardProps): JSX.Element {
                 animate={{ opacity: 1, x: 0 }}
                 className="space-y-6"
               >
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-display font-semibold text-foreground mb-2">
-                    Personaliza tu regla 50/20/30
-                  </h3>
-                  <p className="text-foreground-secondary font-text">
-                    Ajusta los porcentajes según tus necesidades (deben sumar 100%)
-                  </p>
-                </div>
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-display font-semibold text-foreground mb-2">
+                  Personaliza tu regla 50/20/30
+                </h3>
+                <p className="text-foreground-secondary font-text">
+                  Ajusta los porcentajes según tus necesidades (deben sumar 100%)
+                </p>
+              </div>
 
-                <div className="grid gap-4">
-                  {[
-                    { key: 'needs' as const, label: 'Necesidades', color: 'accent-blue' },
-                    { key: 'savings' as const, label: 'Ahorros', color: 'accent-green' },
-                    { key: 'wants' as const, label: 'Deseos', color: 'accent-purple' }
-                  ].map(({ key, label, color }) => (
-                    <div key={key} className="glass-card p-4 rounded-apple">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="font-medium text-foreground">{label}</span>
-                        <span className="font-display font-bold text-foreground">
-                          {formData.customRule[key]}%
-                        </span>
-                      </div>
+              <div className="grid gap-4">
+                {[
+                  { key: 'needs' as const, label: 'Necesidades', color: 'foreground' },
+                  { key: 'savings' as const, label: 'Ahorros', color: 'foreground-secondary' },
+                  { key: 'wants' as const, label: 'Deseos', color: 'foreground-tertiary' }
+                ].map(({ key, label, color }) => (
+                  <div key={key} className="glass-card p-4 rounded-apple">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-foreground">{label}</span>
+                      <span className="font-display font-bold text-foreground">
+                        {formData.customRule[key]}%
+                      </span>
+                    </div>
+                    <div className="relative">
                       <input
                         type="range"
                         min="0"
                         max="100"
                         value={formData.customRule[key]}
                         onChange={(e) => handleRuleChange(key, Number(e.target.value))}
-                        className={`w-full h-2 bg-glass-border rounded-lg appearance-none cursor-pointer slider-${color}`}
+                        className="w-full h-2 bg-glass-border rounded-lg appearance-none cursor-pointer"
                         style={{
-                          background: `linear-gradient(to right, var(--color-${color}) 0%, var(--color-${color}) ${formData.customRule[key]}%, var(--color-glass-border) ${formData.customRule[key]}%, var(--color-glass-border) 100%)`
+                          background: `linear-gradient(to right, #FFFFFF 0%, #FFFFFF ${formData.customRule[key]}%, rgba(255,255,255,0.2) ${formData.customRule[key]}%, rgba(255,255,255,0.2) 100%)`
                         }}
                       />
+                      {/* Línea guía de 100% */}
+                      <div className="absolute top-1/2 left-0 right-0 h-px bg-red-500/30 transform -translate-y-1/2 pointer-events-none" />
+                      <div className="absolute top-1/2 left-1/2 w-px h-4 bg-red-500/50 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
 
-                <div className="text-center">
-                  <p className="text-sm text-foreground-tertiary">
-                    Total: {formData.customRule.needs + formData.customRule.savings + formData.customRule.wants}%
-                  </p>
-                </div>
+              <div className="text-center">
+                <p className={`text-sm font-medium ${
+                  formData.customRule.needs + formData.customRule.savings + formData.customRule.wants === 100 
+                    ? 'text-green-400' 
+                    : 'text-red-400'
+                }`}>
+                  Total: {formData.customRule.needs + formData.customRule.savings + formData.customRule.wants}%
+                  {formData.customRule.needs + formData.customRule.savings + formData.customRule.wants === 100 && ' ✓'}
+                </p>
+              </div>
               </motion.div>
             )}
 
@@ -276,19 +326,19 @@ export function SetupWizard({ onComplete }: SetupWizardProps): JSX.Element {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <span className="text-foreground-secondary">Necesidades</span>
-                        <span className="font-display font-bold text-accent-blue">
+                        <span className="font-display font-bold text-foreground">
                           {formData.customRule.needs}%
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-foreground-secondary">Ahorros</span>
-                        <span className="font-display font-bold text-accent-green">
+                        <span className="font-display font-bold text-foreground-secondary">
                           {formData.customRule.savings}%
                         </span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-foreground-secondary">Deseos</span>
-                        <span className="font-display font-bold text-accent-purple">
+                        <span className="font-display font-bold text-foreground-tertiary">
                           {formData.customRule.wants}%
                         </span>
                       </div>
@@ -311,7 +361,7 @@ export function SetupWizard({ onComplete }: SetupWizardProps): JSX.Element {
               <button
                 onClick={handleNext}
                 disabled={!formData.monthlySalary || Number(formData.monthlySalary) <= 0}
-                className="glass-button px-6 py-3 rounded-apple bg-accent-blue hover:bg-accent-blue/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="glass-button px-6 py-3 rounded-apple bg-foreground hover:bg-foreground-secondary text-surface disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {currentStep === 3 ? 'Completar' : 'Siguiente'}
               </button>

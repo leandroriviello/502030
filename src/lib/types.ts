@@ -43,15 +43,33 @@ export interface ExpenseEntity extends BaseEntity {
 }
 
 export type FundStatus = 'en-curso' | 'completado' | 'pausado';
+export type FundType = 'emergencia' | 'vacaciones' | 'inversiones' | 'crypto' | 'personalizado';
+export type InvestmentType = 'acciones' | 'bonos' | 'fondos' | 'crypto' | 'commodities' | 'efectivo';
+
+export interface FundPosition {
+  id: string;
+  symbol: string;
+  name: string;
+  amount: number;
+  currency: CurrencyCode;
+  investmentType: InvestmentType;
+  location: string; // "BROKER_NAME", "BANCO_NAME", "EXCHANGE_NAME", etc.
+  lastUpdated?: string;
+  apiSource?: 'yahoo' | 'coinmarketcap' | 'manual';
+}
 
 export interface FundEntity extends BaseEntity {
   name: string;
+  description?: string;
+  fundType: FundType;
   targetAmount: number;
-  currentAmount: number;
-  currency: CurrencyCode;
+  currentAmount: number; // Calculado automáticamente desde posiciones
+  currency: CurrencyCode; // Moneda principal del fondo
   targetDate?: string;
   accentColor?: string;
   status: FundStatus;
+  positions: FundPosition[];
+  autoSync: boolean; // Si debe sincronizar automáticamente con APIs
 }
 
 export interface CardEntity extends BaseEntity {
