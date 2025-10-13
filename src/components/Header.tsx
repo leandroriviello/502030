@@ -17,11 +17,15 @@ export function Header({ title, subtitle, rightSlot }: HeaderProps): JSX.Element
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 120, damping: 16 }}
       >
-        <p className="text-xs uppercase tracking-[0.4em] text-white/40">Regla 50·20·30</p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white md:text-4xl">
+        <p className="text-xs uppercase tracking-[0.4em] text-foreground-tertiary font-text font-medium">REGLA 50·20·30</p>
+        <h1 className="mt-3 text-4xl font-display font-semibold tracking-tight text-gradient md:text-5xl">
           {title}
         </h1>
-        {subtitle && <p className="mt-2 text-sm text-white/60 md:text-base">{subtitle}</p>}
+        {subtitle && (
+          <p className="mt-2 text-base text-foreground-secondary font-text md:text-lg">
+            {subtitle}
+          </p>
+        )}
       </motion.div>
       {rightSlot}
     </div>
