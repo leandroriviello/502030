@@ -3,7 +3,7 @@
  * Todos los comentarios están en español para facilitar el mantenimiento del equipo.
  */
 
-export type CurrencyCode = 'ARS' | 'USD' | 'EUR' | 'BRL' | 'CLP' | 'COP' | 'BTC';
+export type CurrencyCode = 'ARS' | 'USD' | 'EUR' | 'BRL' | 'CLP' | 'COP' | 'BTC' | 'ETH';
 
 export type TransactionCategory =
   | 'necesidades'
@@ -43,7 +43,7 @@ export interface ExpenseEntity extends BaseEntity {
 }
 
 export type FundStatus = 'en-curso' | 'completado' | 'pausado';
-export type FundType = 'emergencia' | 'vacaciones' | 'inversiones' | 'crypto' | 'personalizado';
+export type FundType = 'tradicional' | 'acciones' | 'crypto';
 export type InvestmentType = 'acciones' | 'bonos' | 'fondos' | 'crypto' | 'commodities' | 'efectivo';
 
 export interface FundPosition {

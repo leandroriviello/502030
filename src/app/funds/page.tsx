@@ -6,16 +6,33 @@ import { Plus, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 import { NavBar } from '@/components/NavBar';
 import { Header } from '@/components/Header';
 import { GlassCard } from '@/components/GlassCard';
+import { GlassSelect } from '@/components/GlassSelect';
 import { useFinanceStore } from '@/store/useFinanceStore';
-import type { FundEntity, FundType, FundPosition, InvestmentType } from '@/lib/types';
+import type { CurrencyCode, FundEntity, FundType, FundPosition, InvestmentType } from '@/lib/types';
 
 const FUND_TYPES: { type: FundType; label: string; icon: string; description: string }[] = [
-  { type: 'emergencia', label: 'Fondo de Emergencia', icon: '🛡️', description: 'Para imprevistos y gastos urgentes' },
-  { type: 'vacaciones', label: 'Fondo de Vacaciones', icon: '✈️', description: 'Para viajes y tiempo libre' },
-  { type: 'inversiones', label: 'Fondo de Inversiones', icon: '📈', description: 'Para crecimiento a largo plazo' },
-  { type: 'crypto', label: 'Fondo Crypto', icon: '₿', description: 'Para inversiones en criptomonedas' },
-  { type: 'personalizado', label: 'Fondo Personalizado', icon: '🎯', description: 'Para objetivos específicos' }
+  {
+    type: 'tradicional',
+    label: 'Fondo Tradicional',
+    icon: '💼',
+    description: 'Cartera diversificada para un crecimiento equilibrado'
+  },
+  {
+    type: 'acciones',
+    label: 'Fondo de Acciones',
+    icon: '📈',
+    description: 'Enfocado en renta variable y oportunidades de mercado'
+  },
+  {
+    type: 'crypto',
+    label: 'Fondo Crypto',
+    icon: '₿',
+    description: 'Activos digitales para estrategias de mayor volatilidad'
+  }
 ];
+
+const resolveFundType = (type: FundType | string) =>
+  FUND_TYPES.find(ft => ft.type === type) ?? FUND_TYPES[0];
 
 const INVESTMENT_TYPES: { type: InvestmentType; label: string }[] = [
   { type: 'acciones', label: 'Acciones' },
@@ -83,6 +100,9 @@ export default function FundsPage(): JSX.Element {
   };
 
   const calculateProgress = (current: number, target: number) => {
+    if (!target || target <= 0) {
+      return 0;
+    }
     return Math.min((current / target) * 100, 100);
   };
 
@@ -127,7 +147,8 @@ export default function FundsPage(): JSX.Element {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {funds.map((fund, index) => {
               const progress = calculateProgress(fund.currentAmount, fund.targetAmount);
-              const fundType = FUND_TYPES.find(ft => ft.type === fund.fundType);
+              const fundType = resolveFundType(fund.fundType);
+              const hasTarget = fund.targetAmount > 0;
               
               return (
                 <motion.div
@@ -142,13 +163,13 @@ export default function FundsPage(): JSX.Element {
                   >
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{fundType?.icon}</span>
+                        <span className="text-2xl">{fundType.icon}</span>
                         <div>
                           <h3 className="font-display font-semibold text-foreground text-lg">
                             {fund.name}
                           </h3>
                           <p className="text-foreground-secondary font-text text-sm">
-                            {fundType?.label}
+                            {fundType.label}
                           </p>
                         </div>
                       </div>
@@ -156,29 +177,41 @@ export default function FundsPage(): JSX.Element {
                         <p className="font-display font-bold text-foreground text-xl">
                           {formatCurrency(fund.currentAmount, fund.currency)}
                         </p>
-                        <p className="text-foreground-tertiary font-text text-sm">
-                          de {formatCurrency(fund.targetAmount, fund.currency)}
-                        </p>
+                        {hasTarget ? (
+                          <p className="text-foreground-tertiary font-text text-sm">
+                            de {formatCurrency(fund.targetAmount, fund.currency)}
+                          </p>
+                        ) : (
+                          <p className="text-foreground-tertiary font-text text-sm">
+                            Objetivo sin definir
+                          </p>
+                        )}
                       </div>
                     </div>
 
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-foreground-secondary font-text text-sm">Progreso</span>
-                        <span className="font-display font-bold text-foreground">
-                          {Math.round(progress)}%
-                        </span>
+                    {hasTarget ? (
+                      <div className="mb-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-foreground-secondary font-text text-sm">Progreso</span>
+                          <span className="font-display font-bold text-foreground">
+                            {Math.round(progress)}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-glass-border rounded-full h-2">
+                          <div
+                            className="h-2 rounded-full transition-all duration-500"
+                            style={{ 
+                              width: `${progress}%`,
+                              backgroundColor: '#FFFFFF'
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-glass-border rounded-full h-2">
-                        <div
-                          className="h-2 rounded-full transition-all duration-500"
-                          style={{ 
-                            width: `${progress}%`,
-                            backgroundColor: '#FFFFFF'
-                          }}
-                        />
+                    ) : (
+                      <div className="mb-4 text-foreground-tertiary font-text text-sm">
+                        Define un objetivo cuando quieras para medir el progreso.
                       </div>
-                    </div>
+                    )}
 
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-foreground-secondary font-text">
@@ -231,22 +264,25 @@ function CreateFundModal({ onClose, onSave }: { onClose: () => void; onSave: (fu
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    fundType: 'emergencia' as FundType,
-    targetAmount: '',
-    currency: 'USD' as const,
-    targetDate: '',
+    fundType: 'tradicional' as FundType,
+    currency: 'USD' as CurrencyCode,
     autoSync: true
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const { name, description, fundType, currency, autoSync } = formData;
     onSave({
-      ...formData,
-      targetAmount: Number(formData.targetAmount),
+      name,
+      description,
+      fundType,
+      currency,
+      autoSync,
+      targetAmount: 0,
       currentAmount: 0,
       status: 'en-curso',
       positions: [],
-      targetDate: formData.targetDate || undefined
+      targetDate: undefined
     });
   };
 
@@ -278,7 +314,7 @@ function CreateFundModal({ onClose, onSave }: { onClose: () => void; onSave: (fu
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   className="glass-input w-full px-4 py-3 rounded-apple"
-                  placeholder="Ej: Fondo de Emergencia"
+                  placeholder="Ej: Fondo Tradicional"
                   required
                 />
               </div>
@@ -287,46 +323,36 @@ function CreateFundModal({ onClose, onSave }: { onClose: () => void; onSave: (fu
                 <label className="block text-sm font-medium text-foreground-secondary mb-2">
                   Tipo de fondo
                 </label>
-                <select
+                <GlassSelect<FundType>
                   value={formData.fundType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, fundType: e.target.value as FundType }))}
-                  className="glass-input w-full px-4 py-3 rounded-apple"
-                >
-                  {FUND_TYPES.map(type => (
-                    <option key={type.type} value={type.type}>
-                      {type.icon} {type.label}
-                    </option>
-                  ))}
-                </select>
+                  onChange={(value) => setFormData(prev => ({ ...prev, fundType: value }))}
+                  options={FUND_TYPES.map(type => ({
+                    value: type.type,
+                    label: type.label,
+                    icon: type.icon,
+                    description: type.description
+                  }))}
+                  placeholder="Selecciona un tipo de fondo"
+                />
+                <p className="mt-2 text-xs text-foreground-tertiary font-text">
+                  Puedes elegir entre fondos Tradicional, Acciones o Crypto.
+                </p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-foreground-secondary mb-2">
-                  Monto objetivo
+                  Moneda del fondo
                 </label>
-                <div className="flex gap-2">
-                  <select
-                    value={formData.currency}
-                    onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value as any }))}
-                    className="glass-input px-4 py-3 rounded-apple"
-                  >
-                    {CURRENCIES.map(currency => (
-                      <option key={currency.code} value={currency.code}>
-                        {currency.symbol} {currency.code}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="number"
-                    value={formData.targetAmount}
-                    onChange={(e) => setFormData(prev => ({ ...prev, targetAmount: e.target.value }))}
-                    className="glass-input flex-1 px-4 py-3 rounded-apple"
-                    placeholder="0"
-                    min="0"
-                    step="100"
-                    required
-                  />
-                </div>
+                <GlassSelect<CurrencyCode>
+                  value={formData.currency}
+                  onChange={(value) => setFormData(prev => ({ ...prev, currency: value }))}
+                  options={CURRENCIES.map(currency => ({
+                    value: currency.code as CurrencyCode,
+                    label: `${currency.symbol} ${currency.code}`,
+                    description: currency.name
+                  }))}
+                  placeholder="Selecciona la moneda principal"
+                />
               </div>
 
               <div className="flex gap-4">
@@ -409,17 +435,15 @@ function AddPositionModal({ fund, onClose, onSave }: { fund: FundEntity; onClose
                   <label className="block text-sm font-medium text-foreground-secondary mb-2">
                     Tipo
                   </label>
-                  <select
+                  <GlassSelect<InvestmentType>
                     value={formData.investmentType}
-                    onChange={(e) => setFormData(prev => ({ ...prev, investmentType: e.target.value as InvestmentType }))}
-                    className="glass-input w-full px-4 py-3 rounded-apple"
-                  >
-                    {INVESTMENT_TYPES.map(type => (
-                      <option key={type.type} value={type.type}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(value) => setFormData(prev => ({ ...prev, investmentType: value }))}
+                    options={INVESTMENT_TYPES.map(type => ({
+                      value: type.type,
+                      label: type.label
+                    }))}
+                    placeholder="Selecciona un tipo de inversión"
+                  />
                 </div>
               </div>
 
@@ -519,7 +543,7 @@ function FundDetailModal({ fund, onClose, onAddPosition, onUpdate }: {
                   {fund.name}
                 </h2>
                 <p className="text-foreground-secondary font-text">
-                  {FUND_TYPES.find(ft => ft.type === fund.fundType)?.description}
+                  {resolveFundType(fund.fundType).description}
                 </p>
               </div>
               <button
@@ -539,9 +563,15 @@ function FundDetailModal({ fund, onClose, onAddPosition, onUpdate }: {
               </div>
               <div className="glass-card p-4 rounded-apple">
                 <h3 className="font-display font-semibold text-foreground mb-2">Objetivo</h3>
-                <p className="text-2xl font-display font-bold text-foreground">
-                  {formatCurrency(fund.targetAmount, fund.currency)}
-                </p>
+                {fund.targetAmount > 0 ? (
+                  <p className="text-2xl font-display font-bold text-foreground">
+                    {formatCurrency(fund.targetAmount, fund.currency)}
+                  </p>
+                ) : (
+                  <p className="font-text text-foreground-tertiary">
+                    Sin objetivo definido
+                  </p>
+                )}
               </div>
               <div className="glass-card p-4 rounded-apple">
                 <h3 className="font-display font-semibold text-foreground mb-2">Posiciones</h3>
