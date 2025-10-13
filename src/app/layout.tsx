@@ -1,27 +1,39 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
+import { Inter } from 'next/font/google';
+import { PWAInitializer } from '@/components/PWAInitializer';
 import './globals.css';
 
-/** Metadatos base de la app para SEO y PWA */
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap'
+});
+
+/** Metadatos base de la app PWA */
 export const metadata: Metadata = {
-  title: 'Regla 50/20/30 · Control financiero',
+  title: '502030 · Finanzas personales',
   description:
-    'Dashboard financiero minimalista inspirado en Liquid Glass para organizar gastos según la regla 50/20/30.',
-  applicationName: 'Regla 50/20/30',
+    'Controla tus finanzas personales con la regla 50/20/30 en una interfaz Liquid Glass minimalista.',
+  applicationName: '502030',
   manifest: '/manifest.webmanifest',
-  themeColor: '#0f172a',
+  themeColor: '#000000',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Regla 50/20/30'
+    title: '502030'
   }
 };
 
-/** Layout raíz requerido por Next.js con soporte para modo oscuro */
-export default function RootLayout({ children }: PropsWithChildren): JSX.Element {
+export default function RootLayout({
+  children
+}: PropsWithChildren): JSX.Element {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className="bg-surface text-foreground antialiased">{children}</body>
+      <body className={`${inter.variable} bg-surface text-foreground`}>
+        <PWAInitializer />
+        <div className="min-h-screen bg-liquid-glass">{children}</div>
+      </body>
     </html>
   );
 }

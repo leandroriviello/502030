@@ -1,11 +1,24 @@
 {
-  "name": "Regla 50/20/30",
+  "name": "502030 · Finanzas personales",
   "short_name": "502030",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "lang": "es",
   "description": "Controla tus finanzas personales siguiendo la regla 50/20/30 con una interfaz Liquid Glass.",
-  "icons": []
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

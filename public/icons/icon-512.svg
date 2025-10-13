@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="glassGradient512" cx="0.2" cy="0.15" r="1.1">
+      <stop offset="0" stop-color="#38BDF8" stop-opacity="0.6" />
+      <stop offset="0.5" stop-color="#A880FF" stop-opacity="0.45" />
+      <stop offset="1" stop-color="#050505" />
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#050505" />
+  <rect
+    x="64"
+    y="96"
+    width="384"
+    height="320"
+    rx="96"
+    fill="url(#glassGradient512)"
+    stroke="rgba(255,255,255,0.14)"
+    stroke-width="4"
+  />
+  <text
+    x="256"
+    y="306"
+    font-family="Inter, 'SF Pro Display', system-ui"
+    font-size="138"
+    font-weight="600"
+    text-anchor="middle"
+    fill="#FFFFFF"
+  >
+    50·20·30
+  </text>
+</svg>
