@@ -6,14 +6,15 @@ import type {
   FundEntity,
   IncomeEntity,
   ReportSnapshot,
-  SubscriptionEntity
+  SubscriptionEntity,
+  UserConfigEntity
 } from './types';
 
 /** Nombre de la base IndexedDB gestionada por Dexie */
 const DATABASE_NAME = 'regla-502030-db';
 
 /** Versión del esquema Dexie (incrementar cuando cambie la estructura) */
-const DATABASE_VERSION = 1;
+const DATABASE_VERSION = 2;
 
 class FinanceDatabase extends Dexie {
   incomes!: Table<IncomeEntity, string>;
@@ -22,6 +23,7 @@ class FinanceDatabase extends Dexie {
   cards!: Table<CardEntity, string>;
   subscriptions!: Table<SubscriptionEntity, string>;
   reports!: Table<ReportSnapshot, string>;
+  userConfig!: Table<UserConfigEntity, string>;
 
   constructor() {
     super(DATABASE_NAME);
@@ -32,7 +34,8 @@ class FinanceDatabase extends Dexie {
       funds: 'id, status',
       cards: 'id, issuer',
       subscriptions: 'id, status, category, cardId',
-      reports: 'id, month'
+      reports: 'id, month',
+      userConfig: 'id, setupCompleted'
     });
   }
 }

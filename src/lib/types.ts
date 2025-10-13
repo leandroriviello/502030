@@ -86,6 +86,23 @@ export interface ReportSnapshot extends BaseEntity {
   comparisonVsPrevious?: number;
 }
 
+export interface UserConfigEntity extends BaseEntity {
+  /** Salario mensual del usuario */
+  monthlySalary: number;
+  /** Día del mes en que cobra (1-31) */
+  payday: number;
+  /** Moneda principal del usuario */
+  currency: CurrencyCode;
+  /** Si ya completó la configuración inicial */
+  setupCompleted: boolean;
+  /** Regla 50/20/30 personalizada (opcional) */
+  customRule?: {
+    needs: number; // porcentaje para necesidades (default 50)
+    savings: number; // porcentaje para ahorros (default 20)
+    wants: number; // porcentaje para deseos (default 30)
+  };
+}
+
 /** Mapeo entre nombre de tabla y entidad correspondiente */
 export interface FinanceEntityMap {
   readonly incomes: IncomeEntity;
@@ -94,4 +111,5 @@ export interface FinanceEntityMap {
   readonly cards: CardEntity;
   readonly subscriptions: SubscriptionEntity;
   readonly reports: ReportSnapshot;
+  readonly userConfig: UserConfigEntity;
 }

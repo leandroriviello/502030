@@ -1,8 +1,11 @@
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { NavBar } from '@/components/NavBar';
 import { GlassCard } from '@/components/GlassCard';
 import { PieChart502030 } from '@/components/PieChart502030';
 import { ProgressCircle } from '@/components/ProgressCircle';
+import { SetupWizard } from '@/components/SetupWizard';
+import { useFinanceStore } from '@/store/useFinanceStore';
 
 const sampleDistribution = {
   necesidades: 0.5,
@@ -17,6 +20,22 @@ const sampleFunds = [
 ];
 
 export default function DashboardPage(): JSX.Element {
+  const { isSetupCompleted, ready, getUserConfig } = useFinanceStore();
+  const [showSetupWizard, setShowSetupWizard] = useState(false);
+
+  // Mostrar wizard si no está completado y el store está listo
+  useEffect(() => {
+    if (ready && !isSetupCompleted) {
+      setShowSetupWizard(true);
+    }
+  }, [ready, isSetupCompleted]);
+
+  const handleSetupComplete = () => {
+    setShowSetupWizard(false);
+  };
+
+  const userConfig = getUserConfig();
+
   return (
     <div className="flex min-h-screen liquid-glass-bg">
       <NavBar />
@@ -41,7 +60,9 @@ export default function DashboardPage(): JSX.Element {
             <ul className="grid gap-4 text-foreground-secondary">
               <li className="flex items-center justify-between glass-card px-6 py-4 text-sm rounded-apple">
                 <span className="font-text">Ingresos del mes</span>
-                <span className="font-semibold text-foreground font-display">$ 2.450.000</span>
+                <span className="font-semibold text-foreground font-display">
+                  {userConfig ? `${userConfig.currency === 'ARS' ? '$' : userConfig.currency === 'USD' ? '$' : userConfig.currency === 'EUR' ? '€' : userConfig.currency} ${userConfig.monthlySalary.toLocaleString()}` : '$ 2.450.000'}
+                </span>
               </li>
               <li className="flex items-center justify-between glass-card px-6 py-4 text-sm rounded-apple">
                 <span className="font-text">Gastos totales</span>
@@ -49,7 +70,9 @@ export default function DashboardPage(): JSX.Element {
               </li>
               <li className="flex items-center justify-between glass-card px-6 py-4 text-sm rounded-apple">
                 <span className="font-text">Ahorro proyectado</span>
-                <span className="font-semibold text-foreground font-display text-gradient-accent">$ 380.000</span>
+                <span className="font-semibold text-foreground font-display text-gradient-accent">
+                  {userConfig ? `${userConfig.currency === 'ARS' ? '$' : userConfig.currency === 'USD' ? '$' : userConfig.currency === 'EUR' ? '€' : userConfig.currency} ${Math.round(userConfig.monthlySalary * (userConfig.customRule?.savings || 20) / 100).toLocaleString()}` : '$ 380.000'}
+                </span>
               </li>
             </ul>
           </GlassCard>
@@ -73,6 +96,8 @@ export default function DashboardPage(): JSX.Element {
           </div>
         </GlassCard>
       </main>
+
+      {showSetupWizard && <SetupWizard onComplete={handleSetupComplete} />}
     </div>
   );
 }

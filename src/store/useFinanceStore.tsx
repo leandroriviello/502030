@@ -21,7 +21,8 @@ import type {
   FundEntity,
   IncomeEntity,
   ReportSnapshot,
-  SubscriptionEntity
+  SubscriptionEntity,
+  UserConfigEntity
 } from '@/lib/types';
 
 type EntityCollections = {
@@ -31,6 +32,7 @@ type EntityCollections = {
   cards: CardEntity[];
   subscriptions: SubscriptionEntity[];
   reports: ReportSnapshot[];
+  userConfig: UserConfigEntity[];
 };
 
 type FinanceActions = {
@@ -40,6 +42,7 @@ type FinanceActions = {
   upsertFund: (payload: FundEntity) => Promise<void>;
   upsertCard: (payload: CardEntity) => Promise<void>;
   upsertSubscription: (payload: SubscriptionEntity) => Promise<void>;
+  upsertUserConfig: (payload: UserConfigEntity) => Promise<void>;
   removeExpense: (id: string) => Promise<void>;
   resetStore: () => Promise<void>;
 };
@@ -47,6 +50,8 @@ type FinanceActions = {
 export type FinanceStore = EntityCollections &
   FinanceActions & {
     ready: boolean;
+    isSetupCompleted: boolean;
+    getUserConfig: () => UserConfigEntity | undefined;
   };
 
 const FinanceStoreContext = createContext<FinanceStore | null>(null);
@@ -65,19 +70,21 @@ export function FinanceStoreProvider({
     funds: [],
     cards: [],
     subscriptions: [],
-    reports: []
+    reports: [],
+    userConfig: []
   });
   const [ready, setReady] = useState(false);
 
   const initialise = useCallback(async () => {
-    const [incomes, expenses, funds, cards, subscriptions, reports] =
+    const [incomes, expenses, funds, cards, subscriptions, reports, userConfig] =
       await Promise.all([
         getAllRecords('incomes'),
         getAllRecords('expenses'),
         getAllRecords('funds'),
         getAllRecords('cards'),
         getAllRecords('subscriptions'),
-        getAllRecords('reports')
+        getAllRecords('reports'),
+        getAllRecords('userConfig')
       ]);
 
     setState({
@@ -86,7 +93,8 @@ export function FinanceStoreProvider({
       funds,
       cards,
       subscriptions,
-      reports
+      reports,
+      userConfig
     });
     setReady(true);
   }, []);
@@ -168,6 +176,19 @@ export function FinanceStoreProvider({
     []
   );
 
+  const upsertUserConfig = useCallback<FinanceActions['upsertUserConfig']>(async (payload) => {
+    const saved = await upsertRecord('userConfig', {
+      ...payload,
+      id: payload.id ?? createId()
+    });
+    setState((prev) => ({
+      ...prev,
+      userConfig: prev.userConfig.some((config) => config.id === saved.id)
+        ? prev.userConfig.map((config) => (config.id === saved.id ? saved : config))
+        : [...prev.userConfig, saved]
+    }));
+  }, []);
+
   const removeExpense = useCallback<FinanceActions['removeExpense']>(async (id) => {
     await deleteRecord('expenses', id);
     setState((prev) => ({
@@ -183,7 +204,8 @@ export function FinanceStoreProvider({
       clearStore('funds'),
       clearStore('cards'),
       clearStore('subscriptions'),
-      clearStore('reports')
+      clearStore('reports'),
+      clearStore('userConfig')
     ]);
 
     setState({
@@ -192,34 +214,50 @@ export function FinanceStoreProvider({
       funds: [],
       cards: [],
       subscriptions: [],
-      reports: []
+      reports: [],
+      userConfig: []
     });
     setReady(false);
     await initialise();
   }, [initialise]);
 
+  const getUserConfig = useCallback((): UserConfigEntity | undefined => {
+    return state.userConfig[0]; // Solo debe haber una configuración por usuario
+  }, [state.userConfig]);
+
+  const isSetupCompleted = useMemo(() => {
+    const config = getUserConfig();
+    return config?.setupCompleted ?? false;
+  }, [getUserConfig]);
+
   const value = useMemo<FinanceStore>(
     () => ({
       ...state,
       ready,
+      isSetupCompleted,
+      getUserConfig,
       initialise,
       addIncome,
       addExpense,
       upsertFund,
       upsertCard,
       upsertSubscription,
+      upsertUserConfig,
       removeExpense,
       resetStore
     }),
     [
       state,
       ready,
+      isSetupCompleted,
+      getUserConfig,
       initialise,
       addIncome,
       addExpense,
       upsertFund,
       upsertCard,
       upsertSubscription,
+      upsertUserConfig,
       removeExpense,
       resetStore
     ]
