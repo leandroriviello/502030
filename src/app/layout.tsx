@@ -1,13 +1,8 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import dynamic from 'next/dynamic';
 import { AuthProvider } from '@/components/AuthProvider';
+import { AppShellClient } from '@/components/AppShellClient';
 import './globals.css';
-
-const AppShellClient = dynamic(
-  () => import('@/components/AppShellClient').then(mod => mod.AppShellClient),
-  { ssr: false }
-);
 
 /** Metadatos base de la app PWA */
 export const metadata: Metadata = {
