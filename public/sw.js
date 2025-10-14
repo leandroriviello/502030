@@ -1,7 +1,9 @@
-const CACHE_NAME = '502030-shell-v1';
+const CACHE_VERSION = 'v2';
+const CACHE_NAME = `502030-shell-${CACHE_VERSION}`;
 const APP_SHELL = ['/', '/dashboard', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(APP_SHELL);
