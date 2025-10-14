@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import { PWAInitializer } from '@/components/PWAInitializer';
+import dynamic from 'next/dynamic';
 import { AuthProvider } from '@/components/AuthProvider';
-import { FloatingActionButton } from '@/components/FloatingActionButton';
-import { FinanceStoreProvider } from '@/store/useFinanceStore';
 import './globals.css';
+
+const AppShellClient = dynamic(
+  () => import('@/components/AppShellClient').then(mod => mod.AppShellClient),
+  { ssr: false }
+);
 
 /** Metadatos base de la app PWA */
 export const metadata: Metadata = {
@@ -28,11 +31,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className="font-sans bg-liquid-glass text-foreground antialiased">
         <AuthProvider>
-          <FinanceStoreProvider>
-            <PWAInitializer />
-            <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
-            <FloatingActionButton />
-          </FinanceStoreProvider>
+          <AppShellClient>{children}</AppShellClient>
         </AuthProvider>
       </body>
     </html>
