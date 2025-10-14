@@ -6,7 +6,7 @@ import { Header } from '@/components/Header';
 import { GlassCard } from '@/components/GlassCard';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import { CURRENCY_OPTIONS, MOVEMENT_CATEGORY_OPTIONS } from '@/lib/constants';
-import type { BillingCycle } from '@/lib/types';
+import type { BillingCycle, MovementCategory } from '@/lib/types';
 
 const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
