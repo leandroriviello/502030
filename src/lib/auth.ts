@@ -7,8 +7,11 @@ import { prisma } from './prisma';
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: 'database',
+    strategy: 'jwt',
     maxAge: 60 * 60 * 24 * 30 // 30 días
+  },
+  jwt: {
+    maxAge: 60 * 60 * 24 * 30
   },
   secret: process.env.AUTH_SECRET,
   providers: [
@@ -56,30 +59,33 @@ export const authOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (!session.user) {
-        return session;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.username = user.username;
+        token.name = user.name ?? token.name;
+        token.email = user.email ?? token.email;
+      } else if (!token.username && token.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+          select: { id: true, username: true, name: true, email: true }
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.username = dbUser.username;
+          token.name = dbUser.name ?? token.name;
+          token.email = dbUser.email ?? token.email;
+        }
       }
-
-      const baseUser =
-        user ??
-        (session.user.email
-          ? await prisma.user.findUnique({
-              where: { email: session.user.email },
-              select: { id: true, username: true, name: true, email: true }
-            })
-          : null);
-
-      if (baseUser) {
-        session.user.id = baseUser.id;
-        session.user.username = baseUser.username;
-        session.user.name = baseUser.name ?? session.user.name ?? undefined;
-        session.user.email = baseUser.email ?? session.user.email ?? undefined;
-      } else {
-        session.user.id = session.user.id ?? '';
-        session.user.username = session.user.username ?? '';
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = typeof token.id === 'string' ? token.id : '';
+        session.user.username = typeof token.username === 'string' ? token.username : session.user.username;
+        session.user.name = token.name ?? session.user.name ?? undefined;
+        session.user.email = token.email ?? session.user.email ?? undefined;
       }
-
       return session;
     }
   },
