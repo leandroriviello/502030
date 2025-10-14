@@ -3,6 +3,7 @@ import type { PropsWithChildren } from 'react';
 import { Inter } from 'next/font/google';
 import { PWAInitializer } from '@/components/PWAInitializer';
 import { AuthProvider } from '@/components/AuthProvider';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FinanceStoreProvider } from '@/store/useFinanceStore';
 import './globals.css';
 
@@ -38,6 +39,7 @@ export default function RootLayout({
           <FinanceStoreProvider>
             <PWAInitializer />
             <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
+            <FloatingActionButton />
           </FinanceStoreProvider>
         </AuthProvider>
       </body>

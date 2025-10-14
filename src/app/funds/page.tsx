@@ -9,6 +9,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { GlassSelect } from '@/components/GlassSelect';
 import { useFinanceStore } from '@/store/useFinanceStore';
 import type { CurrencyCode, FundEntity, FundType, FundPosition, InvestmentType } from '@/lib/types';
+import { CURRENCY_OPTIONS } from '@/lib/constants';
 
 const FUND_TYPES: { type: FundType; label: string; icon: string; description: string }[] = [
   {
@@ -41,17 +42,6 @@ const INVESTMENT_TYPES: { type: InvestmentType; label: string }[] = [
   { type: 'crypto', label: 'Criptomonedas' },
   { type: 'commodities', label: 'Commodities' },
   { type: 'efectivo', label: 'Efectivo' }
-];
-
-const CURRENCIES = [
-  { code: 'ARS', name: 'Peso Argentino', symbol: '$' },
-  { code: 'USD', name: 'Dólar Estadounidense', symbol: '$' },
-  { code: 'EUR', name: 'Euro', symbol: '€' },
-  { code: 'BRL', name: 'Real Brasileño', symbol: 'R$' },
-  { code: 'CLP', name: 'Peso Chileno', symbol: '$' },
-  { code: 'COP', name: 'Peso Colombiano', symbol: '$' },
-  { code: 'BTC', name: 'Bitcoin', symbol: '₿' },
-  { code: 'ETH', name: 'Ethereum', symbol: 'Ξ' }
 ];
 
 export default function FundsPage(): JSX.Element {
@@ -94,7 +84,7 @@ export default function FundsPage(): JSX.Element {
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    const currencyInfo = CURRENCIES.find(c => c.code === currency);
+    const currencyInfo = CURRENCY_OPTIONS.find(c => c.code === currency);
     const symbol = currencyInfo?.symbol || currency;
     return `${symbol} ${amount.toLocaleString()}`;
   };
@@ -346,8 +336,8 @@ function CreateFundModal({ onClose, onSave }: { onClose: () => void; onSave: (fu
                 <GlassSelect<CurrencyCode>
                   value={formData.currency}
                   onChange={(value) => setFormData(prev => ({ ...prev, currency: value }))}
-                  options={CURRENCIES.map(currency => ({
-                    value: currency.code as CurrencyCode,
+                  options={CURRENCY_OPTIONS.map(currency => ({
+                    value: currency.code,
                     label: `${currency.symbol} ${currency.code}`,
                     description: currency.name
                   }))}
@@ -523,7 +513,7 @@ function FundDetailModal({ fund, onClose, onAddPosition, onUpdate }: {
   onUpdate: (fund: FundEntity) => void;
 }) {
   const formatCurrency = (amount: number, currency: string) => {
-    const currencyInfo = CURRENCIES.find(c => c.code === currency);
+    const currencyInfo = CURRENCY_OPTIONS.find(c => c.code === currency);
     const symbol = currencyInfo?.symbol || currency;
     return `${symbol} ${amount.toLocaleString()}`;
   };

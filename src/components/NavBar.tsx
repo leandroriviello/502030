@@ -11,7 +11,10 @@ import {
   Receipt,
   BarChart3,
   Settings,
-  LogOut
+  LogOut,
+  Wallet,
+  ArrowUpDown,
+  FileText
 } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 
@@ -23,9 +26,12 @@ interface NavItem {
 
 const items: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Fondos', href: '/funds', icon: PiggyBank },
+  { label: 'Movimientos', href: '/movements', icon: ArrowUpDown },
+  { label: 'Cuentas', href: '/accounts', icon: Wallet },
   { label: 'Tarjetas', href: '/cards', icon: CreditCard },
   { label: 'Suscripciones', href: '/subscriptions', icon: Receipt },
+  { label: 'Fondos', href: '/funds', icon: PiggyBank },
+  { label: 'Deudas', href: '/debts', icon: FileText },
   { label: 'Reportes', href: '/reports', icon: BarChart3 },
   { label: 'Ajustes', href: '/settings', icon: Settings }
 ];

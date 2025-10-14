@@ -1,29 +1,23 @@
 import Dexie, { Table } from 'dexie';
-import type {
-  CardEntity,
-  ExpenseEntity,
-  FinanceEntityMap,
-  FundEntity,
-  IncomeEntity,
-  ReportSnapshot,
-  SubscriptionEntity,
-  UserConfigEntity
-} from './types';
+import type { FinanceEntityMap } from './types';
 
 /** Nombre de la base IndexedDB gestionada por Dexie */
 const DATABASE_NAME = 'regla-502030-db';
 
 /** Versión del esquema Dexie (incrementar cuando cambie la estructura) */
-const DATABASE_VERSION = 2;
+const DATABASE_VERSION = 3;
 
 class FinanceDatabase extends Dexie {
-  incomes!: Table<IncomeEntity, string>;
-  expenses!: Table<ExpenseEntity, string>;
-  funds!: Table<FundEntity, string>;
-  cards!: Table<CardEntity, string>;
-  subscriptions!: Table<SubscriptionEntity, string>;
-  reports!: Table<ReportSnapshot, string>;
-  userConfig!: Table<UserConfigEntity, string>;
+  incomes!: Table<FinanceEntityMap['incomes'], string>;
+  expenses!: Table<FinanceEntityMap['expenses'], string>;
+  funds!: Table<FinanceEntityMap['funds'], string>;
+  bankAccounts!: Table<FinanceEntityMap['bankAccounts'], string>;
+  cards!: Table<FinanceEntityMap['cards'], string>;
+  subscriptions!: Table<FinanceEntityMap['subscriptions'], string>;
+  movements!: Table<FinanceEntityMap['movements'], string>;
+  debts!: Table<FinanceEntityMap['debts'], string>;
+  reports!: Table<FinanceEntityMap['reports'], string>;
+  userConfig!: Table<FinanceEntityMap['userConfig'], string>;
 
   constructor() {
     super(DATABASE_NAME);
@@ -32,8 +26,11 @@ class FinanceDatabase extends Dexie {
       incomes: 'id, date, amount',
       expenses: 'id, date, category, cardId, subscriptionId',
       funds: 'id, status',
-      cards: 'id, issuer',
-      subscriptions: 'id, status, category, cardId',
+      bankAccounts: 'id, institution, currency',
+      cards: 'id, issuer, bankAccountId',
+      subscriptions: 'id, status, category, cardId, bankAccountId',
+      movements: 'id, date, type, accountId, cardId',
+      debts: 'id, status, accountId',
       reports: 'id, month',
       userConfig: 'id, setupCompleted'
     });

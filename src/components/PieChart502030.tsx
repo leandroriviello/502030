@@ -8,10 +8,17 @@ interface PieChartProps {
     ahorros: number;
     deseos: number;
   };
+  centerTitle?: string;
+  centerSubtitle?: string;
+  legendLabels?: {
+    necesidades?: string;
+    ahorros?: string;
+    deseos?: string;
+  };
 }
 
 /** Pie chart minimalista utilizando conic-gradient para la regla 50/20/30 */
-export function PieChart502030({ distribution }: PieChartProps): JSX.Element {
+export function PieChart502030({ distribution, centerTitle, centerSubtitle, legendLabels }: PieChartProps): JSX.Element {
   const necesidades = Math.round(distribution.necesidades * 100);
   const ahorros = Math.round(distribution.ahorros * 100);
   const deseos = Math.round(distribution.deseos * 100);
@@ -36,22 +43,26 @@ export function PieChart502030({ distribution }: PieChartProps): JSX.Element {
         />
         <div className="absolute inset-10 rounded-full bg-black/70 backdrop-blur-xl" />
         <div className="absolute inset-12 flex flex-col items-center justify-center text-center">
-          <p className="text-xs uppercase tracking-[0.4em] text-foreground-tertiary">Meta</p>
-          <p className="mt-1 text-lg font-semibold text-foreground">50 · 20 · 30</p>
+          <p className="text-xs uppercase tracking-[0.4em] text-foreground-tertiary">
+            {centerSubtitle ?? 'Meta'}
+          </p>
+          <p className="mt-1 text-lg font-semibold text-foreground">
+            {centerTitle ?? '50 · 20 · 30'}
+          </p>
         </div>
       </div>
       <ul className="flex gap-6 text-sm text-foreground-secondary">
         <li className="flex items-center gap-2">
           <span className="h-2 w-8 rounded-full bg-foreground" />
-          Necesidades {necesidades}%
+          {legendLabels?.necesidades ?? 'Necesidades'} {necesidades}%
         </li>
         <li className="flex items-center gap-2">
           <span className="h-2 w-8 rounded-full bg-foreground-secondary" />
-          Ahorros {ahorros}%
+          {legendLabels?.ahorros ?? 'Ahorros'} {ahorros}%
         </li>
         <li className="flex items-center gap-2">
           <span className="h-2 w-8 rounded-full bg-foreground-tertiary" />
-          Deseos {deseos}%
+          {legendLabels?.deseos ?? 'Deseos'} {deseos}%
         </li>
       </ul>
     </motion.div>

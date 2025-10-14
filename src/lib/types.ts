@@ -72,28 +72,108 @@ export interface FundEntity extends BaseEntity {
   autoSync: boolean; // Si debe sincronizar automáticamente con APIs
 }
 
-export interface CardEntity extends BaseEntity {
-  issuer: string;
-  lastFour: string;
-  creditLimit: number;
-  currentSpend: number;
+export type AccountType = 'corriente' | 'caja-ahorro' | 'inversion' | 'wallet';
+
+export interface BankAccountEntity extends BaseEntity {
+  name: string;
+  institution: string;
+  alias?: string;
+  accountType: AccountType;
   currency: CurrencyCode;
-  closingDate: string;
-  dueDate: string;
-  lastPaymentAmount?: number;
+  balance: number;
+  autopayDay?: number;
+  notes?: string;
+  color?: string;
+}
+
+export interface CardEntity extends BaseEntity {
+  name: string;
+  issuer: string;
+  lastFour?: string;
+  creditLimit: number;
+  currency: CurrencyCode;
+  closingDay: number;
+  paymentDay: number;
+  bankAccountId?: string;
+  notes?: string;
 }
 
 export type SubscriptionStatus = 'activa' | 'pausada' | 'cancelada';
+export type SubscriptionCategory =
+  | 'streaming'
+  | 'ai'
+  | 'videojuegos'
+  | 'productividad'
+  | 'educacion'
+  | 'musica'
+  | 'finanzas'
+  | 'hogar'
+  | 'otros';
+
+export type BillingCycle = 'semanal' | 'mensual' | 'trimestral' | 'anual';
 
 export interface SubscriptionEntity extends BaseEntity {
   name: string;
+  provider: string;
   amount: number;
   currency: CurrencyCode;
-  billingIntervalDays: number;
+  billingCycle: BillingCycle;
+  billingDay: number;
   nextChargeDate: string;
   status: SubscriptionStatus;
-  category: TransactionCategory;
+  category: SubscriptionCategory;
   cardId?: string;
+  bankAccountId?: string;
+  notes?: string;
+}
+
+export type MovementType = 'ingreso' | 'egreso' | 'transferencia';
+
+export type MovementCategory =
+  | 'salario'
+  | 'freelance'
+  | 'venta'
+  | 'inversion'
+  | 'servicios'
+  | 'suscripcion'
+  | 'educacion'
+  | 'salud'
+  | 'entretenimiento'
+  | 'alquiler'
+  | 'alimentacion'
+  | 'transporte'
+  | 'deuda'
+  | 'otros';
+
+export interface MovementEntity extends BaseEntity {
+  date: string;
+  type: MovementType;
+  description: string;
+  amount: number;
+  currency: CurrencyCode;
+  category: MovementCategory;
+  accountId?: string;
+  destinationAccountId?: string;
+  cardId?: string;
+  fundId?: string;
+  subscriptionId?: string;
+  tags?: string[];
+  notes?: string;
+}
+
+export type DebtStatus = 'activa' | 'pagada' | 'vencida';
+
+export interface DebtEntity extends BaseEntity {
+  creditor: string;
+  description?: string;
+  totalAmount: number;
+  remainingAmount: number;
+  currency: CurrencyCode;
+  dueDate?: string;
+  interestRate?: number;
+  accountId?: string;
+  status: DebtStatus;
+  lastPaymentDate?: string;
 }
 
 export interface ReportSnapshot extends BaseEntity {
@@ -126,8 +206,11 @@ export interface FinanceEntityMap {
   readonly incomes: IncomeEntity;
   readonly expenses: ExpenseEntity;
   readonly funds: FundEntity;
+  readonly bankAccounts: BankAccountEntity;
   readonly cards: CardEntity;
   readonly subscriptions: SubscriptionEntity;
+  readonly movements: MovementEntity;
+  readonly debts: DebtEntity;
   readonly reports: ReportSnapshot;
   readonly userConfig: UserConfigEntity;
 }
