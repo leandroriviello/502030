@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { Plus, TrendingUp, TrendingDown, ArrowLeftRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { MovementModal, type MovementFormState } from '@/components/MovementModal';
@@ -12,7 +13,7 @@ const ACTIONS: Array<{
   type: MovementType;
   label: string;
   description: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: LucideIcon;
   color: string;
 }> = [
   {
