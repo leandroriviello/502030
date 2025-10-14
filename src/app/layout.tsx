@@ -1,7 +1,11 @@
+"use client";
+
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { AuthProvider } from '@/components/AuthProvider';
-import { AppShellClient } from '@/components/AppShellClient';
+import { FinanceStoreProvider } from '@/store/useFinanceStore';
+import { PWAInitializer } from '@/components/PWAInitializer';
+import { FloatingActionButton } from '@/components/FloatingActionButton';
 import './globals.css';
 
 /** Metadatos base de la app PWA */
@@ -26,7 +30,11 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className="font-sans bg-liquid-glass text-foreground antialiased">
         <AuthProvider>
-          <AppShellClient>{children}</AppShellClient>
+          <FinanceStoreProvider>
+            <PWAInitializer />
+            <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
+            <FloatingActionButton />
+          </FinanceStoreProvider>
         </AuthProvider>
       </body>
     </html>
