@@ -1,18 +1,10 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
-import { Inter } from 'next/font/google';
 import { PWAInitializer } from '@/components/PWAInitializer';
 import { AuthProvider } from '@/components/AuthProvider';
 import { FloatingActionButton } from '@/components/FloatingActionButton';
 import { FinanceStoreProvider } from '@/store/useFinanceStore';
 import './globals.css';
-
-// Fuente principal - Inter como base, con fallback a fuentes del sistema Apple
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap'
-});
 
 /** Metadatos base de la app PWA */
 export const metadata: Metadata = {
@@ -34,7 +26,7 @@ export default function RootLayout({
 }: PropsWithChildren): JSX.Element {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans bg-liquid-glass text-foreground antialiased`}>
+      <body className="font-sans bg-liquid-glass text-foreground antialiased">
         <AuthProvider>
           <FinanceStoreProvider>
             <PWAInitializer />

@@ -1,0 +1,20 @@
+--- a/node_modules/next/dist/compiled/@next/font/dist/google/module-loader.js
++++ b/node_modules/next/dist/compiled/@next/font/dist/google/module-loader.js
+@@
+-        } catch (err) {
+-            console.error(`Failed to fetch font \\`${fontName}\\` from Google Fonts. Using fallback.`, err);
+-            fallbacks.push(...fontConfig.fallback);
+-        }
++        } catch (err) {
++            console.error(`Failed to fetch font \\`${fontName}\\` from Google Fonts. Using fallback.`, err);
++            fallbacks.push(...fontConfig.fallback);
++        }
+@@
+-        } catch (err) {
+-            console.error(`Failed to fetch font \\`${fontName}\\` from Google Fonts. Using fallback.`, err);
+-            fontConfig.fallback.push('system-ui');
+-        }
++        } catch (err) {
++            console.error(`Failed to fetch font \\`${fontName}\\` from Google Fonts. Using fallback.`, err);
++            fontConfig.fallback.push('system-ui');
++        }
