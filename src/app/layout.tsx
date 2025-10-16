@@ -3,6 +3,11 @@ import type { PropsWithChildren } from 'react';
 import { AppShellClient } from '@/components/AppShellClient';
 import './globals.css';
 
+// Verificar variables de entorno en producción
+if (process.env.NODE_ENV === 'production') {
+  require('@/lib/env-check');
+}
+
 /** Metadatos base de la app PWA */
 export const metadata: Metadata = {
   title: '502030 · Finanzas personales',
