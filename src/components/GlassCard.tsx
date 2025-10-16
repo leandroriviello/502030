@@ -22,7 +22,7 @@ export function GlassCard({
 }: PropsWithChildren<GlassCardProps>): JSX.Element {
   return (
     <motion.section
-      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-accent-muted-strong/40 hover:shadow-glass-lg ${className ?? 'glass-card'} ${onClick ? 'cursor-pointer' : ''}`}
+      className={`group relative overflow-hidden rounded-apple-lg border border-glass-border backdrop-blur-xl transition-all duration-300 hover:border-foreground-secondary/40 hover:shadow-glass-lg ${className ?? 'glass-card'} ${onClick ? 'cursor-pointer' : ''}`}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 120, damping: 18 }}
