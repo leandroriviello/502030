@@ -299,8 +299,8 @@ function SubscriptionModal({
   const [loading, setLoading] = useState(false);
 
   const providerSuggestions = useMemo(() => {
-    return POPULAR_SUBSCRIPTION_PROVIDERS.filter((provider) => provider.category === form.category);
-  }, [form.category]);
+    return POPULAR_SUBSCRIPTION_PROVIDERS; // Simplified - return all providers
+  }, []);
 
   const handleChange = <Key extends keyof SubscriptionFormState>(key: Key, value: SubscriptionFormState[Key]) => {
     setForm(prev => ({
@@ -373,7 +373,7 @@ function SubscriptionModal({
                 />
                 <datalist id="subscription-provider">
                   {providerSuggestions.map((provider) => (
-                    <option key={provider.name} value={provider.name} />
+                    <option key={provider} value={provider} />
                   ))}
                 </datalist>
               </div>

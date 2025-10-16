@@ -24,18 +24,14 @@ type CardFormState = {
 };
 
 export default function CardsPage(): JSX.Element {
-  const { cards, movements, bankAccounts, upsertCard, removeCard } = useFinanceStore();
+  const { cards, bankAccounts, upsertCard, removeCard } = useFinanceStore();
   const [showModal, setShowModal] = useState(false);
   const [editingCard, setEditingCard] = useState<CardEntity | null>(null);
 
+  // Simplified - no movements data available yet
   const spendByCard = useMemo(() => {
-    return movements.reduce<Record<string, number>>((acc, movement) => {
-      if (movement.cardId && movement.type === 'egreso') {
-        acc[movement.cardId] = (acc[movement.cardId] ?? 0) + movement.amount;
-      }
-      return acc;
-    }, {});
-  }, [movements]);
+    return {} as Record<string, number>; // Will be populated when movements are implemented
+  }, []);
 
   const handleCreate = () => {
     setEditingCard(null);

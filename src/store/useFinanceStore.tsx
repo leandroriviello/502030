@@ -18,9 +18,11 @@ import {
 import type {
   BankAccountEntity,
   CardEntity,
+  DebtEntity,
   ExpenseEntity,
   FundEntity,
   IncomeEntity,
+  MovementEntity,
   ReportSnapshot,
   SubscriptionEntity,
   UserConfigEntity
@@ -33,6 +35,8 @@ type EntityCollections = {
   bankAccounts: BankAccountEntity[];
   cards: CardEntity[];
   subscriptions: SubscriptionEntity[];
+  movements: MovementEntity[];
+  debts: DebtEntity[];
   reports: ReportSnapshot[];
   userConfig: UserConfigEntity[];
 };
@@ -45,7 +49,13 @@ type FinanceActions = {
   upsertBankAccount: (payload: BankAccountEntity) => Promise<void>;
   removeBankAccount: (id: string) => Promise<void>;
   upsertCard: (payload: CardEntity) => Promise<void>;
+  removeCard: (id: string) => Promise<void>;
   upsertSubscription: (payload: SubscriptionEntity) => Promise<void>;
+  removeSubscription: (id: string) => Promise<void>;
+  upsertMovement: (payload: MovementEntity) => Promise<void>;
+  removeMovement: (id: string) => Promise<void>;
+  upsertDebt: (payload: DebtEntity) => Promise<void>;
+  removeDebt: (id: string) => Promise<void>;
   upsertUserConfig: (payload: UserConfigEntity) => Promise<void>;
   removeExpense: (id: string) => Promise<void>;
   resetStore: () => Promise<void>;
@@ -75,13 +85,15 @@ export function FinanceStoreProvider({
     bankAccounts: [],
     cards: [],
     subscriptions: [],
+    movements: [],
+    debts: [],
     reports: [],
     userConfig: []
   });
   const [ready, setReady] = useState(false);
 
   const initialise = useCallback(async () => {
-    const [incomes, expenses, funds, bankAccounts, cards, subscriptions, reports, userConfig] =
+    const [incomes, expenses, funds, bankAccounts, cards, subscriptions, movements, debts, reports, userConfig] =
       await Promise.all([
         getAllRecords('incomes'),
         getAllRecords('expenses'),
@@ -89,6 +101,8 @@ export function FinanceStoreProvider({
         getAllRecords('bankAccounts'),
         getAllRecords('cards'),
         getAllRecords('subscriptions'),
+        getAllRecords('movements'),
+        getAllRecords('debts'),
         getAllRecords('reports'),
         getAllRecords('userConfig')
       ]);
@@ -100,6 +114,8 @@ export function FinanceStoreProvider({
       bankAccounts,
       cards,
       subscriptions,
+      movements,
+      debts,
       reports,
       userConfig
     });
@@ -184,6 +200,14 @@ export function FinanceStoreProvider({
     }));
   }, []);
 
+  const removeCard = useCallback<FinanceActions['removeCard']>(async (id) => {
+    await deleteRecord('cards', id);
+    setState((prev) => ({
+      ...prev,
+      cards: prev.cards.filter((card) => card.id !== id)
+    }));
+  }, []);
+
   const upsertSubscription = useCallback<FinanceActions['upsertSubscription']>(
     async (payload) => {
       const saved = await upsertRecord('subscriptions', {
@@ -203,6 +227,56 @@ export function FinanceStoreProvider({
     },
     []
   );
+
+  const removeSubscription = useCallback<FinanceActions['removeSubscription']>(async (id) => {
+    await deleteRecord('subscriptions', id);
+    setState((prev) => ({
+      ...prev,
+      subscriptions: prev.subscriptions.filter((subscription) => subscription.id !== id)
+    }));
+  }, []);
+
+  const upsertMovement = useCallback<FinanceActions['upsertMovement']>(async (payload) => {
+    const saved = await upsertRecord('movements', {
+      ...payload,
+      id: payload.id ?? createId()
+    });
+    setState((prev) => ({
+      ...prev,
+      movements: prev.movements.some((movement) => movement.id === saved.id)
+        ? prev.movements.map((movement) => (movement.id === saved.id ? saved : movement))
+        : [...prev.movements, saved]
+    }));
+  }, []);
+
+  const removeMovement = useCallback<FinanceActions['removeMovement']>(async (id) => {
+    await deleteRecord('movements', id);
+    setState((prev) => ({
+      ...prev,
+      movements: prev.movements.filter((movement) => movement.id !== id)
+    }));
+  }, []);
+
+  const upsertDebt = useCallback<FinanceActions['upsertDebt']>(async (payload) => {
+    const saved = await upsertRecord('debts', {
+      ...payload,
+      id: payload.id ?? createId()
+    });
+    setState((prev) => ({
+      ...prev,
+      debts: prev.debts.some((debt) => debt.id === saved.id)
+        ? prev.debts.map((debt) => (debt.id === saved.id ? saved : debt))
+        : [...prev.debts, saved]
+    }));
+  }, []);
+
+  const removeDebt = useCallback<FinanceActions['removeDebt']>(async (id) => {
+    await deleteRecord('debts', id);
+    setState((prev) => ({
+      ...prev,
+      debts: prev.debts.filter((debt) => debt.id !== id)
+    }));
+  }, []);
 
   const upsertUserConfig = useCallback<FinanceActions['upsertUserConfig']>(async (payload) => {
     const saved = await upsertRecord('userConfig', {
@@ -233,6 +307,8 @@ export function FinanceStoreProvider({
       clearStore('bankAccounts'),
       clearStore('cards'),
       clearStore('subscriptions'),
+      clearStore('movements'),
+      clearStore('debts'),
       clearStore('reports'),
       clearStore('userConfig')
     ]);
@@ -244,6 +320,8 @@ export function FinanceStoreProvider({
       bankAccounts: [],
       cards: [],
       subscriptions: [],
+      movements: [],
+      debts: [],
       reports: [],
       userConfig: []
     });
@@ -273,7 +351,13 @@ export function FinanceStoreProvider({
       upsertBankAccount,
       removeBankAccount,
       upsertCard,
+      removeCard,
       upsertSubscription,
+      removeSubscription,
+      upsertMovement,
+      removeMovement,
+      upsertDebt,
+      removeDebt,
       upsertUserConfig,
       removeExpense,
       resetStore
@@ -290,7 +374,13 @@ export function FinanceStoreProvider({
       upsertBankAccount,
       removeBankAccount,
       upsertCard,
+      removeCard,
       upsertSubscription,
+      removeSubscription,
+      upsertMovement,
+      removeMovement,
+      upsertDebt,
+      removeDebt,
       upsertUserConfig,
       removeExpense,
       resetStore

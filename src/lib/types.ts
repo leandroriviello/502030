@@ -101,14 +101,15 @@ export interface CardEntity extends BaseEntity {
 export type SubscriptionStatus = 'activa' | 'pausada' | 'cancelada';
 export type SubscriptionCategory =
   | 'streaming'
-  | 'ai'
-  | 'videojuegos'
-  | 'productividad'
-  | 'educacion'
-  | 'musica'
-  | 'finanzas'
-  | 'hogar'
-  | 'otros';
+  | 'software'
+  | 'fitness'
+  | 'music'
+  | 'news'
+  | 'productivity'
+  | 'gaming'
+  | 'education'
+  | 'cloud'
+  | 'other';
 
 export type BillingCycle = 'semanal' | 'mensual' | 'trimestral' | 'anual';
 
