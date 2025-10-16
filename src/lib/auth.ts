@@ -13,7 +13,7 @@ export const authOptions: AuthOptions = {
   jwt: {
     maxAge: 60 * 60 * 24 * 30
   },
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || 'fallback-secret-for-development',
   providers: [
     CredentialsProvider({
       name: 'Credenciales',
