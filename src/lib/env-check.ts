@@ -1,5 +1,10 @@
 // Verificación de variables de entorno críticas
 export function checkRequiredEnvVars() {
+  // Solo verificar en runtime del servidor, no durante build
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return;
+  }
+
   const required = ['AUTH_SECRET', 'NEXTAUTH_URL'];
   const missing = required.filter(key => !process.env[key]);
   
@@ -15,7 +20,7 @@ export function checkRequiredEnvVars() {
   console.log('✅ Variables de entorno verificadas correctamente');
 }
 
-// Verificar al importar
-if (process.env.NODE_ENV === 'production') {
+// Verificar al importar (solo en runtime del servidor)
+if (process.env.NODE_ENV === 'production' && process.env.NEXT_PHASE !== 'phase-production-build') {
   checkRequiredEnvVars();
 }

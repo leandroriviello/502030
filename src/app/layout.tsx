@@ -4,8 +4,8 @@ import { AppShellClient } from '@/components/AppShellClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './globals.css';
 
-// Verificar variables de entorno en producción
-if (process.env.NODE_ENV === 'production') {
+// Verificar variables de entorno en producción (solo en runtime, no en build)
+if (process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
   require('@/lib/env-check');
 }
 
