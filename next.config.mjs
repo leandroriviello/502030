@@ -2,7 +2,7 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: process.env.NODE_ENV === 'production',
   // Configuración para Railway
   experimental: {
     outputFileTracingRoot: process.cwd(),

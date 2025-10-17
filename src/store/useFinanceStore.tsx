@@ -98,6 +98,7 @@ export function FinanceStoreProvider({
     userConfig: []
   });
   const [ready, setReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const initialise = useCallback(async () => {
     try {
@@ -148,6 +149,7 @@ export function FinanceStoreProvider({
   }, []);
 
   useEffect(() => {
+    setMounted(true);
     void initialise();
   }, [initialise]);
 
@@ -366,7 +368,7 @@ export function FinanceStoreProvider({
   const value = useMemo<FinanceStore>(
     () => ({
       ...state,
-      ready,
+      ready: ready && mounted,
       isSetupCompleted,
       getUserConfig,
       initialise,
@@ -390,6 +392,7 @@ export function FinanceStoreProvider({
     [
       state,
       ready,
+      mounted,
       isSetupCompleted,
       getUserConfig,
       initialise,
@@ -426,5 +429,11 @@ export const useFinanceStore = (): FinanceStore => {
       'useFinanceStore debe utilizarse dentro de un FinanceStoreProvider.'
     );
   }
+  return context;
+};
+
+// Hook para uso seguro en componentes que pueden renderizarse en el servidor
+export const useFinanceStoreSafe = (): FinanceStore | null => {
+  const context = useContext(FinanceStoreContext);
   return context;
 };
