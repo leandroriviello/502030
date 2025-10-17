@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type { PropsWithChildren } from 'react';
 import { AppShellClient } from '@/components/AppShellClient';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import './globals.css';
 
 // Verificar variables de entorno en producción
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className="font-sans bg-liquid-glass text-foreground antialiased">
-        <AppShellClient>{children}</AppShellClient>
+        <ErrorBoundary>
+          <AppShellClient>{children}</AppShellClient>
+        </ErrorBoundary>
       </body>
     </html>
   );

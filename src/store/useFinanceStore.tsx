@@ -70,10 +70,17 @@ export type FinanceStore = EntityCollections &
 
 const FinanceStoreContext = createContext<FinanceStore | null>(null);
 
-const createId = (): string =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2, 11);
+const createId = (): string => {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+  } catch (error) {
+    console.warn('crypto.randomUUID() failed, using fallback:', error);
+  }
+  // Fallback más robusto
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+};
 
 export function FinanceStoreProvider({
   children
@@ -93,33 +100,51 @@ export function FinanceStoreProvider({
   const [ready, setReady] = useState(false);
 
   const initialise = useCallback(async () => {
-    const [incomes, expenses, funds, bankAccounts, cards, subscriptions, movements, debts, reports, userConfig] =
-      await Promise.all([
-        getAllRecords('incomes'),
-        getAllRecords('expenses'),
-        getAllRecords('funds'),
-        getAllRecords('bankAccounts'),
-        getAllRecords('cards'),
-        getAllRecords('subscriptions'),
-        getAllRecords('movements'),
-        getAllRecords('debts'),
-        getAllRecords('reports'),
-        getAllRecords('userConfig')
-      ]);
+    try {
+      const [incomes, expenses, funds, bankAccounts, cards, subscriptions, movements, debts, reports, userConfig] =
+        await Promise.all([
+          getAllRecords('incomes').catch(() => []),
+          getAllRecords('expenses').catch(() => []),
+          getAllRecords('funds').catch(() => []),
+          getAllRecords('bankAccounts').catch(() => []),
+          getAllRecords('cards').catch(() => []),
+          getAllRecords('subscriptions').catch(() => []),
+          getAllRecords('movements').catch(() => []),
+          getAllRecords('debts').catch(() => []),
+          getAllRecords('reports').catch(() => []),
+          getAllRecords('userConfig').catch(() => [])
+        ]);
 
-    setState({
-      incomes,
-      expenses,
-      funds,
-      bankAccounts,
-      cards,
-      subscriptions,
-      movements,
-      debts,
-      reports,
-      userConfig
-    });
-    setReady(true);
+      setState({
+        incomes,
+        expenses,
+        funds,
+        bankAccounts,
+        cards,
+        subscriptions,
+        movements,
+        debts,
+        reports,
+        userConfig
+      });
+      setReady(true);
+    } catch (error) {
+      console.error('Error initializing finance store:', error);
+      // Inicializar con arrays vacíos en caso de error
+      setState({
+        incomes: [],
+        expenses: [],
+        funds: [],
+        bankAccounts: [],
+        cards: [],
+        subscriptions: [],
+        movements: [],
+        debts: [],
+        reports: [],
+        userConfig: []
+      });
+      setReady(true);
+    }
   }, []);
 
   useEffect(() => {
