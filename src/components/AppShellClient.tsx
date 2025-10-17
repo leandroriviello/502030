@@ -8,12 +8,14 @@ import { AuthProvider } from '@/components/AuthProvider';
 
 export function AppShellClient({ children }: PropsWithChildren): JSX.Element {
   return (
-    <AuthProvider>
-      <FinanceStoreProvider>
-        <PWAInitializer />
-        <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">{children}</div>
-        <FloatingActionButton />
-      </FinanceStoreProvider>
-    </AuthProvider>
+    <div className="min-h-screen bg-liquid-glass backdrop-blur-3xl">
+      <AuthProvider>
+        <FinanceStoreProvider>
+          <PWAInitializer />
+          {children}
+          <FloatingActionButton />
+        </FinanceStoreProvider>
+      </AuthProvider>
+    </div>
   );
 }

@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className="font-sans bg-liquid-glass text-foreground antialiased">
         <ErrorBoundary>
-          <SimpleAppShell>{children}</SimpleAppShell>
+          <AppShellClient>{children}</AppShellClient>
         </ErrorBoundary>
       </body>
     </html>
