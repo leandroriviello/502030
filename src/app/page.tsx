@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
@@ -9,12 +11,18 @@ export default function Home() {
           Finanzas personales - Regla 50/20/30
         </p>
         <div className="space-y-4">
-          <button className="w-full bg-white text-black py-3 px-6 rounded-lg font-semibold hover:bg-white/90 transition-colors">
+          <Link 
+            href="/login"
+            className="w-full bg-white text-black py-3 px-6 rounded-lg font-semibold hover:bg-white/90 transition-colors block"
+          >
             Iniciar Sesión
-          </button>
-          <button className="w-full bg-white/20 text-white py-3 px-6 rounded-lg font-semibold hover:bg-white/30 transition-colors border border-white/30">
+          </Link>
+          <Link 
+            href="/register"
+            className="w-full bg-white/20 text-white py-3 px-6 rounded-lg font-semibold hover:bg-white/30 transition-colors border border-white/30 block"
+          >
             Registrarse
-          </button>
+          </Link>
         </div>
         <div className="mt-8 text-sm text-white/60">
           <p>✅ Aplicación funcionando correctamente</p>
